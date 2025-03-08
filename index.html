@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Todo List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Kosugi Maru', sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .background-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .sakura-fall {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23ffb7c5" d="M50 0L79.3 38.2H100L65.7 61.8L81.6 100H50L34.3 61.8L18.4 100H0L34.3 61.8L20.7 38.2H0L20.7 0H50Z"/></svg>');
+      background-size: 200px;
+      animation: fall 15s linear infinite;
+      opacity: 0.3;
+    }
+
+    .clouds {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 100px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100"><path fill="%23ffffff" opacity="0.3" d="M183.3 56.7C166.7 63.3 141.7 63.3 125 56.7 108.3 50 100 33.3 100 16.7 100 0 116.7-8.3 133.3 0c16.7 8.3 33.3 25 33.3 41.7 0 16.7-8.3 33.3-25 41.7C158.3 66.7 175 56.7 183.3 56.7Z"/></svg>');
+      background-repeat: repeat-x;
+      animation: float 20s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100%) rotate(0deg); }
+      100% { transform: translateY(100%) rotate(180deg); }
+    }
+
+    @keyframes float {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    h1 {
+      color: #ff6b6b;
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .input-section {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      border: 2px solid #ff9a9e;
+      border-radius: 10px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #ff6b6b;
+      box-shadow: 0 0 0 2px rgba(255, 107, 107, 0.2);
+      outline: none;
+    }
+
+    .date-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #ff6b6b, #ff9a9e);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .error-message {
+      color: #ff4444;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .add-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #4cd5d2, #4c90d5);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .add-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .task-item {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .task-content {
+      flex: 1;
+      margin-right: 15px;
+    }
+
+    .task-name {
+      font-size: 1.1rem;
+      margin-bottom: 5px;
+      transition: all 0.3s ease;
+    }
+
+    .task-time {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .delete-btn {
+      background: #ff6b6b;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .delete-btn:hover {
+      transform: rotate(90deg);
+    }
+
+    .completed .task-name {
+      position: relative;
+      color: #b3b3b3;
+    }
+
+    .completed .task-name::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: #b3b3b3;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      animation: strikeThrough 0.3s ease forwards;
+    }
+
+    @keyframes strikeThrough {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+
+    .flatpickr-calendar {
+      background: #fff5f5 !important;
+      border: 2px solid #ff9a9e !important;
+      border-radius: 15px !important;
+      font-family: 'Kosugi Maru', sans-serif !important;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .flatpickr-day {
+      border-radius: 50% !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .flatpickr-day.selected {
+      background: #ff6b6b !important;
+      color: white !important;
+      transform: scale(1.1) !important;
+    }
+
+    .flatpickr-time {
+      background: #fff5f5 !important;
+      border-top: 2px solid #ff9a9e !important;
+    }
+
+    .flatpickr-time input {
+      color: #ff6b6b !important;
+    }
+
+    .chibi-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .chibi {
+      position: relative;
+      width: 120px;
+      height: 150px;
+    }
+
+    .body {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 80px;
+      background: #ffcccc;
+      border-radius: 50%;
+    }
+
+    .eyes {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .eye {
+      width: 20px;
+      height: 20px;
+      background: #333;
+      border-radius: 50%;
+      transition: transform 0.1s ease;
+      position: relative;
+    }
+
+    .eye::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .mouth {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 15px;
+      border-bottom: 3px solid #333;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 500px) {
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .input-section {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="background-wrap">
+      <div class="sakura-fall"></div>
+      <div class="clouds"></div>
+    </div>
+    <h1>🌸 Todo List</h1>
+    <div class="input-section">
+      <div class="form-group">
+        <input type="text" id="taskInput" placeholder="What to do... ✍️" />
+      </div>
+      <div class="form-group date-picker-group">
+        <button id="datePickerBtn" class="date-btn">📅 Pick Date & Time</button>
+        <input type="hidden" id="selectedDate">
+        <div id="dateError" class="error-message"></div>
+      </div>
+      <button id="addTaskBtn" class="add-btn">Add Task 📝</button>
+    </div>
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- Chibi Character -->
+  <div class="chibi-container">
+    <div class="chibi">
+      <div class="body"></div>
+      <div class="eyes">
+        <div class="eye left-eye"></div>
+        <div class="eye right-eye"></div>
+      </div>
+      <div class="mouth"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const taskInput = document.getElementById('taskInput');
+      const datePickerBtn = document.getElementById('datePickerBtn');
+      const selectedDate = document.getElementById('selectedDate');
+      const addTaskBtn = document.getElementById('addTaskBtn');
+      const taskList = document.getElementById('taskList');
+      const dateError = document.getElementById('dateError');
+
+      // Initialize Flatpickr
+      const datepicker = flatpickr(datePickerBtn, {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        onChange: function(selectedDates, dateStr) {
+          selectedDate.value = dateStr;
+          dateError.style.display = 'none';
+        }
+      });
+
+      addTaskBtn.addEventListener('click', addTask);
+      taskInput.addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+      datePickerBtn.addEventListener('keypress', (e) => e.key === 'Enter' && addTask());
+
+      function addTask() {
+        const taskText = taskInput.value.trim();
+        const dateTime = selectedDate.value;
+
+        if (!taskText) {
+          alert('Please enter a task!');
+          return;
+        }
+
+        if (!dateTime) {
+          dateError.textContent = '🌸 Please select date and time first!';
+          dateError.style.display = 'block';
+          return;
+        }
+
+        const taskItem = document.createElement('li');
+        taskItem.className = 'task-item';
+        taskItem.innerHTML = `
+          <div class="task-content">
+            <div class="task-name">${taskText}</div>
+            <div class="task-time">${formatDateTime(dateTime)}</div>
+          </div>
+          <div class="delete-btn">×</div>
+        `;
+
+        taskItem.querySelector('.delete-btn').addEventListener('click', () => {
+          taskItem.style.animation = 'fadeOut 0.3s ease';
+          setTimeout(() => taskItem.remove(), 300);
+        });
+
+        taskItem.addEventListener('click', () => {
+          taskItem.classList.toggle('completed');
+        });
+
+        taskList.appendChild(taskItem);
+        taskInput.value = '';
+        selectedDate.value = '';
+        dateError.style.display = 'none';
+        datepicker.clear();
+      }
+
+      function formatDateTime(dateTime) {
+        const date = new Date(dateTime);
+        return date.toLocaleString('en-US', {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      // Chibi eye tracking
+      const eyes = document.querySelectorAll('.eye');
+      document.addEventListener('mousemove', (e) => {
+        eyes.forEach(eye => {
+          const eyeRect = eye.getBoundingClientRect();
+          const dx = e.clientX - (eyeRect.left + eyeRect.width/2);
+          const dy = e.clientY - (eyeRect.top + eyeRect.height/2);
+          const angle = Math.atan2(dy, dx);
+          const distance = Math.min(5, Math.sqrt(dx*dx + dy*dy)/30);
+          eye.style.transform = `translate(${Math.cos(angle)*distance}px, ${Math.sin(angle)*distance}px)`;
+        });
+      });
+
+      // Blink animation
+      setInterval(() => {
+        const eyes = document.querySelector('.eyes');
+        eyes.style.transform = 'scaleY(0.1)';
+        setTimeout(() => eyes.style.transform = 'scaleY(1)', 150);
+      }, 5000);
+    });
+  </script>
+</body>
+</html>
