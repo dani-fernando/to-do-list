@@ -65,32 +65,3 @@ _Modal date picker dengan tema flat-design_
 
 ## 📜 Lisensi
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
-
----
-
-Hajimemashite! 🌟  
-Aplikasi ini dibuat dengan 💖 oleh Dani Fernando
-"Yappari, productivity mo kawaii ga ii desho?"  
-*(Tentu saja, produktivitas juga harus imut kan?)*
-```
-
-### Versi Jepang (opsional):
-```markdown
-# 🌸 アニメ風TODOリスト - 最強のかわいいタスク管理 🌸
-
-## 特徴
-- アニメ風カスタムカーソル
-- モダンなデートピッカー
-- タスク完了時のアニメーション
-- 桜の背景エフェクト
-- レスポンシブデザイン
-
-## 使い方
-1. `index.html` をブラウザで開く
-2. タスクを入力 ✍️
-3. 日時を選択 📅
-4. タスクを追加 🌟
-
-"勉強も遊びも、かわいい方が楽しいよね！"  
-*(勉強も仕事も、可愛い方が楽しいでしょ！)*
-```
