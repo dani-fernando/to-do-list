@@ -447,8 +447,8 @@
       // Blink animation
       setInterval(() => {
         const eyes = document.querySelector('.eyes');
-        eyes.style.transform = 'scaleY(0.1)';
-        setTimeout(() => eyes.style.transform = 'scaleY(1)', 150);
+        eyes.style.transform = 'translateX(-50%) scaleY(0.1)';
+        setTimeout(() => eyes.style.transform = null, 150);
       }, 5000);
     });
   </script>
