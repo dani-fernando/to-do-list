@@ -1,4 +1,3 @@
-```markdown
 # 🌸 Anime Todo List - Kawaii Task Manager 🌸
 
 ![Banner](https://i.imgur.com/6QbX6yA.png)
